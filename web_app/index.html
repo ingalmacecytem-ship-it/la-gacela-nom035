@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>La Gacela NOM-035</title>
+    <link rel="stylesheet" href="style.css"> <!-- Estilos de la PWA. -->
+    <link rel="manifest" href="manifest.json"> <!-- Manifest para instalación en móvil. -->
+</head>
+<body>
+    <header class="topbar">
+        <div class="brand">La Gacela NOM-035</div>
+        <div id="userRole" class="badge">Invitado</div>
+    </header>
+
+    <main class="container">
+        <section id="loginSection" class="card active">
+            <h1>Iniciar sesión</h1>
+            <p>Accede a la aplicación de Manufacturera de Ropa La Gacela.</p>
+            <form id="loginForm">
+                <label for="username">Usuario</label>
+                <input id="username" name="username" autocomplete="username" required>
+                <label for="password">Contraseña</label>
+                <input id="password" name="password" type="password" autocomplete="current-password" required>
+                <button type="submit">Ingresar</button>
+                <p id="loginError" class="error"></p>
+            </form>
+        </section>
+
+        <section id="dashboardSection" class="card">
+            <h1>Dashboard La Gacela NOM-035</h1>
+            <div class="grid">
+                <div class="metric">
+                    <span id="centrosCount">0</span>
+                    <small>Centros registrados</small>
+                </div>
+                <div class="metric">
+                    <span id="evaluacionesCount">0</span>
+                    <small>Evaluaciones totales</small>
+                </div>
+                <div class="metric">
+                    <button id="logoutButton" class="secondary">Cerrar sesión</button>
+                </div>
+            </div>
+
+            <div class="card-subsection">
+                <h2>Registrar centro de trabajo</h2>
+                <form id="centroForm">
+                    <label for="razonSocial">Razón social</label>
+                    <input id="razonSocial" required>
+                    <label for="domicilio">Domicilio</label>
+                    <input id="domicilio" required>
+                    <label for="actividadPrincipal">Actividad principal</label>
+                    <input id="actividadPrincipal" required>
+                    <label for="totalTrabajadores">Total de trabajadores</label>
+                    <input id="totalTrabajadores" type="number" min="1" required>
+                    <button type="submit">Registrar centro</button>
+                    <p id="centroMessage" class="success"></p>
+                </form>
+            </div>
+
+            <div class="card-subsection">
+                <h2>Registrar evaluación</h2>
+                <form id="evaluacionForm">
+                    <label for="centroSelect">Centro</label>
+                    <select id="centroSelect" required></select>
+                    <label for="tipoGuia">Tipo de guía</label>
+                    <select id="tipoGuia">
+                        <option value="II">Guía II</option>
+                        <option value="I">Guía I</option>
+                    </select>
+                    <label for="comentarios">Comentarios</label>
+                    <textarea id="comentarios"></textarea>
+                    <button type="submit">Guardar evaluación</button>
+                    <p id="evaluacionMessage" class="success"></p>
+                </form>
+            </div>
+
+            <div class="card-subsection">
+                <h2>Historial de evaluaciones</h2>
+                <div id="evaluacionesList" class="list"></div>
+            </div>
+        </section>
+    </main>
+
+    <script src="app.js"></script> <!-- Lógica del frontend. -->
+</body>
+</html>

@@ -1,0 +1,1 @@
+This directory contains the web/PWA frontend for the NOM-035 app.

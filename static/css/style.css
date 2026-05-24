@@ -1,0 +1,21 @@
+body {
+    background: #f5f7fb; /* Fondo suave para lectura agradable. */
+}
+
+.navbar-brand {
+    font-weight: 700; /* Marca con mayor peso. */
+}
+
+.card {
+    border-radius: 0.85rem; /* Bordes redondeados suaves. */
+}
+
+h1, h2 {
+    color: #0d3b66; /* Color corporativo azul oscuro. */
+}
+
+footer {
+    margin-top: 4rem;
+    text-align: center;
+    color: #6c757d;
+}

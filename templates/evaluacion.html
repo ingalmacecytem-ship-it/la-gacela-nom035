@@ -1,0 +1,47 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="row justify-content-center"> <!-- Centro la tarjeta de evaluación. -->
+    <div class="col-12 col-md-10"> <!-- Espacio amplio para formulario. -->
+        <div class="card shadow-sm"> <!-- Tarjeta de contenido. -->
+            <div class="card-body"> <!-- Cuerpo de tarjeta. -->
+                <h2>Registrar Evaluación NOM-035 - La Gacela</h2>
+                {% if mensaje %}
+                    <div class="alert alert-success">{{ mensaje }}</div> <!-- Mensaje de éxito. -->
+                {% endif %}
+                <form method="post"> <!-- Envío del formulario. -->
+                    <div class="mb-3">
+                        <label class="form-label" for="centro_id">Centro de trabajo</label>
+                        <select class="form-select" id="centro_id" name="centro_id" required>
+                            <option value="">Selecciona un centro</option>
+                            {% for centro in centros %}
+                                <option value="{{ centro.id }}">{{ centro.razon_social }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="tipo_guia">Tipo de guía</label>
+                        <select class="form-select" id="tipo_guia" name="tipo_guia">
+                            <option value="II">Guía II - Factores de riesgo psicosocial</option>
+                            <option value="I">Guía I - Acontecimiento traumático</option>
+                        </select>
+                    </div>
+                    <p class="lead">Responde los valores del cuestionario (0-4) según la escala oficial.</p>
+                    <div class="row g-3"> <!-- Preguntas con puntajes. -->
+                        {% for i in range(1, 11) %}
+                        <div class="col-12 col-md-6">
+                            <label class="form-label" for="item_{{ i }}">Item {{ i }}</label>
+                            <input class="form-control" id="item_{{ i }}" name="item_{{ i }}" type="number" min="0" max="4" value="0">
+                        </div>
+                        {% endfor %}
+                    </div>
+                    <div class="mb-3 mt-3">
+                        <label class="form-label" for="comentarios">Comentarios adicionales</label>
+                        <textarea class="form-control" id="comentarios" name="comentarios" rows="4"></textarea>
+                    </div>
+                    <button class="btn btn-primary">Guardar evaluación</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

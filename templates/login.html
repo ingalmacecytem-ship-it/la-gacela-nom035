@@ -1,0 +1,26 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="row justify-content-center"> <!-- Centra el formulario. -->
+    <div class="col-12 col-md-6"> <!-- Tamaño responsivo. -->
+        <div class="card shadow-sm"> <!-- Tarjeta de login. -->
+            <div class="card-body"> <!-- Contenido de la tarjeta. -->
+                <h2 class="card-title mb-4">Iniciar sesión</h2>
+                {% if error %}
+                    <div class="alert alert-danger">{{ error }}</div> <!-- Muestra error de login. -->
+                {% endif %}
+                <form method="post"> <!-- Formulario POST. -->
+                    <div class="mb-3"> <!-- Campo usuario. -->
+                        <label class="form-label" for="username">Usuario</label>
+                        <input class="form-control" id="username" name="username" required>
+                    </div>
+                    <div class="mb-3"> <!-- Campo contraseña. -->
+                        <label class="form-label" for="password">Contraseña</label>
+                        <input class="form-control" id="password" name="password" type="password" required>
+                    </div>
+                    <button class="btn btn-primary w-100" type="submit">Ingresar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

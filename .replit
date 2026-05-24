@@ -1,0 +1,2 @@
+run = "python run_replit.py"
+language = "python3"

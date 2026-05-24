@@ -1,0 +1,84 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="row"> <!-- Fila principal del dashboard. -->
+    <div class="col-12"> <!-- Columna completa. -->
+        <h1>Dashboard La Gacela</h1>
+        <p class="lead">Bienvenido {{ session.get('username') }}. Rol asignado: {{ roles.get(role, role) }}.</p>
+    </div>
+</div>
+
+<div class="row g-3"> <!-- Tarjetas de métricas. -->
+    <div class="col-12 col-md-4"> <!-- Total centros. -->
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h5 class="card-title">Centros registrados</h5>
+                <p class="display-6">{{ total_centros }}</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-12 col-md-4"> <!-- Total evaluaciones. -->
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h5 class="card-title">Evaluaciones totales</h5>
+                <p class="display-6">{{ total_evaluaciones }}</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-12 col-md-4"> <!-- Acceso de exportación. -->
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h5 class="card-title">Reportes</h5>
+                <p>Exporta todos los datos a Excel (solo admin).</p>
+                {% if role == 'admin' %}
+                    <a class="btn btn-success" href="{{ url_for('reporte_excel') }}">Descargar Excel</a>
+                {% else %}
+                    <span class="badge bg-secondary">Solo admin</span>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4"> <!-- Gráfico de niveles de riesgo. -->
+    <div class="col-12 col-lg-8"> <!-- Espacio para gráfico. -->
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h5 class="card-title">Distribución de niveles de riesgo</h5>
+                <canvas id="riesgoChart"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+    const niveles = {{ niveles|tojson }};  // Datos para el gráfico.
+    const labels = niveles.map(item => item.nivel_riesgo || 'Sin nivel');
+    const datos = niveles.map(item => item.total);
+
+    const ctx = document.getElementById('riesgoChart').getContext('2d');
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Número de evaluaciones',
+                data: datos,
+                backgroundColor: 'rgba(54, 162, 235, 0.6)',
+                borderColor: 'rgba(54, 162, 235, 1)',
+                borderWidth: 1,
+            }],
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                },
+            },
+        },
+    });
+</script>
+{% endblock %}

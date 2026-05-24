@@ -1,0 +1,11 @@
+{
+  "expo": {
+    "name": "La Gacela NOM-035",
+    "slug": "la-gacela-nom035-mobile",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "platforms": ["ios", "android", "web"],
+    "sdkVersion": "49.0.0",
+    "userInterfaceStyle": "automatic"
+  }
+}

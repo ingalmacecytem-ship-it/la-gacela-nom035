@@ -1,0 +1,13 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="row justify-content-center"> <!-- Error centrado. -->
+    <div class="col-12 col-md-8"> <!-- Contenedor responsivo. -->
+        <div class="alert alert-danger"> <!-- Mensaje de error principal. -->
+            <h4 class="alert-heading">Ocurrió un error</h4>
+            <p>{{ mensaje }}</p>
+            <hr>
+            <a class="btn btn-secondary" href="{{ url_for('dashboard') }}">Volver al dashboard</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

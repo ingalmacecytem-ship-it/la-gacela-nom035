@@ -1,0 +1,4 @@
+venv/
+*.pyc
+__pycache__/
+nom035_app.db
