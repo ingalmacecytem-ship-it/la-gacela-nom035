@@ -82,6 +82,9 @@ def dashboard_admin():
     # Distribución por niveles de riesgo (para gráfico)
     niveles = database.query_db("SELECT nivel_riesgo, COUNT(*) AS total FROM evaluaciones GROUP BY nivel_riesgo")
 
+    # Últimas evaluaciones registradas
+    recientes = database.query_db("SELECT e.*, c.razon_social FROM evaluaciones e LEFT JOIN centros c ON e.centro_id = c.id ORDER BY e.fecha DESC LIMIT 10")
+
     return render_template("dashboard_admin.html", 
         total_empleados=total_empleados,
         total_encuestas=total_encuestas,
@@ -90,6 +93,7 @@ def dashboard_admin():
         total_centros=total_centros,
         total_evaluaciones=total_evaluaciones,
         niveles=niveles,
+        recientes=recientes,
         role=session.get("role"))
 
 def dashboard_rrhh():
@@ -153,13 +157,18 @@ def dashboard_empleado():
         ORDER BY c.fecha_inicio DESC
     """, (empleado_id, empleado_id))
     
+    # Mostrar últimas evaluaciones para el empleado (visibilidad general)
+    recientes = database.query_db("SELECT e.*, c.razon_social FROM evaluaciones e LEFT JOIN centros c ON e.centro_id = c.id ORDER BY e.fecha DESC LIMIT 5")
+
     return render_template("dashboard_empleado.html",
         usuario=usuario,
         mis_respuestas=mis_respuestas,
         mi_indicador=mi_indicador,
         mis_capacitaciones=mis_capacitaciones,
+        recientes=recientes,
         role=session.get("role"),
         nombre_completo=session.get("nombre_completo"))
+
 
 # ==================== ENCUESTAS Y CUESTIONARIOS ====================
 
@@ -623,6 +632,25 @@ def reporte_excel():
     buffer.seek(0)
     return send_file(buffer, as_attachment=True, download_name='evaluaciones_nom035.xlsx',
                      mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+
+
+@app.route('/evaluacion/<int:evaluacion_id>/pdf')
+@login_required()
+def evaluacion_pdf(evaluacion_id):
+    """Genera y descarga el PDF de una evaluación específica."""
+    row = database.query_db("SELECT e.*, c.razon_social, c.domicilio, c.actividad_principal, c.total_trabajadores FROM evaluaciones e LEFT JOIN centros c ON e.centro_id = c.id WHERE e.id = ?", (evaluacion_id,), one=True)
+    if not row:
+        return render_template('error.html', mensaje='Evaluación no encontrada'), 404
+
+    centro = {
+        'razon_social': row.get('razon_social'),
+        'domicilio': row.get('domicilio'),
+        'actividad_principal': row.get('actividad_principal'),
+        'total_trabajadores': row.get('total_trabajadores')
+    }
+
+    buffer = crear_pdf_evaluacion(row, centro)
+    return send_file(buffer, as_attachment=True, download_name=f"evaluacion_{evaluacion_id}.pdf", mimetype='application/pdf')
 
 # ==================== MANEJO DE ERRORES ====================
 

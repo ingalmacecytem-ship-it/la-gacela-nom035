@@ -63,5 +63,39 @@
             </a>
         </div>
     </div>
+    
+    <div class="mt-4">
+        <h3>Últimas Evaluaciones</h3>
+        {% if recientes %}
+        <table class="table table-sm">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Centro</th>
+                    <th>Tipo</th>
+                    <th>Puntaje</th>
+                    <th>Nivel</th>
+                    <th>Fecha</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for e in recientes %}
+                <tr>
+                    <td>{{ e.id }}</td>
+                    <td>{{ e.razon_social or 'N/A' }}</td>
+                    <td>{{ e.tipo_guia }}</td>
+                    <td>{{ e.puntaje or '-' }}</td>
+                    <td>{{ e.nivel_riesgo or '-' }}</td>
+                    <td>{{ e.fecha }}</td>
+                    <td><a class="btn btn-sm btn-outline-primary" href="{{ url_for('evaluacion_pdf', evaluacion_id=e.id) }}">PDF</a></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p class="text-muted">No hay evaluaciones registradas.</p>
+        {% endif %}
+    </div>
 </div>
 {% endblock %}
