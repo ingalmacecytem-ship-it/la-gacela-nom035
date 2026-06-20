@@ -46,6 +46,9 @@
                     <p><strong>Puntaje:</strong> <span id="res_puntaje">-</span></p>
                     <p><strong>Nivel de riesgo:</strong> <span id="res_nivel">-</span></p>
                     <div id="res_acciones" style="white-space:pre-wrap;"></div>
+                    <div class="mt-2">
+                        <a id="btn_pdf" class="btn btn-sm btn-outline-secondary" href="#" style="display:none;" target="_blank">Descargar PDF</a>
+                    </div>
                 </div>
 
                 <script>
@@ -88,10 +91,15 @@
                         document.getElementById('res_nivel').textContent = json.nivel_riesgo || '-';
                         document.getElementById('res_acciones').textContent = json.acciones_necesarias || '';
                         document.getElementById('resultado').style.display = 'block';
+                        if(json.evaluacion_id){
+                            const btn = document.getElementById('btn_pdf');
+                            btn.href = `/evaluacion/${json.evaluacion_id}/pdf`;
+                            btn.style.display = 'inline-block';
+                        }
                     });
                 })();
                 </script>
-                </form>
+            
             </div>
         </div>
     </div>

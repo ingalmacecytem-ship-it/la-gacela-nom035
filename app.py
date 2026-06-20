@@ -9,6 +9,10 @@ from utils import crear_pdf_evaluacion, crear_excel_resumen
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = "nom035_secret_2026_lagacela"
+# Directorio donde se guardarán PDFs exportados (puede sobreescribirse con la variable de entorno EVAL_EXPORT_DIR)
+export_dir = os.environ.get('EVAL_EXPORT_DIR', r"C:\Archivos")
+app.config['EVALUACIONES_EXPORT_DIR'] = export_dir
+os.makedirs(app.config['EVALUACIONES_EXPORT_DIR'], exist_ok=True)
 
 # ==================== DECORADORES ====================
 
@@ -617,7 +621,10 @@ def api_evaluacion():
         "INSERT INTO evaluaciones (centro_id, tipo_guia, datos_json, puntaje, nivel_riesgo, acciones_necesarias, fecha) VALUES (?, ?, ?, ?, ?, ?, ?)",
         (centro_id, tipo_guia, _json.dumps(datos, ensure_ascii=False), puntaje, nivel_riesgo, acciones_necesarias, datetime.now().strftime('%Y-%m-%d'))
     )
-    resp = {'success': True, 'message': 'Evaluación registrada', 'puntaje': puntaje, 'nivel_riesgo': nivel_riesgo}
+    # Obtener el id de la evaluación recién insertada
+    nuevo = database.query_db("SELECT id FROM evaluaciones ORDER BY id DESC LIMIT 1", one=True)
+    evaluacion_id = nuevo['id'] if nuevo else None
+    resp = {'success': True, 'message': 'Evaluación registrada', 'puntaje': puntaje, 'nivel_riesgo': nivel_riesgo, 'evaluacion_id': evaluacion_id}
     if acciones_necesarias:
         resp['acciones_necesarias'] = acciones_necesarias
     return jsonify(resp)
@@ -650,6 +657,18 @@ def evaluacion_pdf(evaluacion_id):
     }
 
     buffer = crear_pdf_evaluacion(row, centro)
+    # Guardar copia en disco en el directorio configurado
+    try:
+        export_dir = app.config.get('EVALUACIONES_EXPORT_DIR')
+        filename = f"evaluacion_{evaluacion_id}.pdf"
+        filepath = os.path.join(export_dir, filename)
+        with open(filepath, 'wb') as f:
+            f.write(buffer.getvalue())
+    except Exception:
+        # No bloquear la descarga si la escritura falla
+        pass
+
+    buffer.seek(0)
     return send_file(buffer, as_attachment=True, download_name=f"evaluacion_{evaluacion_id}.pdf", mimetype='application/pdf')
 
 # ==================== MANEJO DE ERRORES ====================
