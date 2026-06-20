@@ -8,7 +8,7 @@
                 {% if mensaje %}
                     <div class="alert alert-success">{{ mensaje }}</div> <!-- Mensaje de éxito. -->
                 {% endif %}
-                <form method="post"> <!-- Envío del formulario. -->
+                <form id="evaluacionForm"> <!-- Envío del formulario vía JS. -->
                     <div class="mb-3">
                         <label class="form-label" for="centro_id">Centro de trabajo</label>
                         <select class="form-select" id="centro_id" name="centro_id" required>
@@ -38,7 +38,59 @@
                         <label class="form-label" for="comentarios">Comentarios adicionales</label>
                         <textarea class="form-control" id="comentarios" name="comentarios" rows="4"></textarea>
                     </div>
-                    <button class="btn btn-primary">Guardar evaluación</button>
+                    <button type="submit" class="btn btn-primary">Guardar evaluación</button>
+                </form>
+
+                <div id="resultado" class="mt-4" style="display:none;">
+                    <h4>Resultado de la evaluación</h4>
+                    <p><strong>Puntaje:</strong> <span id="res_puntaje">-</span></p>
+                    <p><strong>Nivel de riesgo:</strong> <span id="res_nivel">-</span></p>
+                    <div id="res_acciones" style="white-space:pre-wrap;"></div>
+                </div>
+
+                <script>
+                (function(){
+                    const form = document.getElementById('evaluacionForm');
+                    form.addEventListener('submit', async function(e){
+                        e.preventDefault();
+                        const centro_id = document.getElementById('centro_id').value;
+                        const tipo_guia = document.getElementById('tipo_guia').value;
+                        // Collect items 1..46 if present, otherwise the inputs shown (1..10)
+                        const datos = { respuestas: {} };
+                        for(let i=1;i<=46;i++){
+                            const el = document.getElementById('item_'+i);
+                            if(!el) continue;
+                            const v = el.value === '' ? null : Number(el.value);
+                            datos.respuestas[i] = v === null ? 0 : v;
+                        }
+                        // Fallback: if no items found, collect any item_* inputs present
+                        if(Object.keys(datos.respuestas).length===0){
+                            const inputs = form.querySelectorAll('[id^="item_"]');
+                            inputs.forEach(function(inp){
+                                const id = inp.id.replace('item_','');
+                                datos.respuestas[Number(id)] = Number(inp.value || 0);
+                            });
+                        }
+
+                        const payload = { centro_id: Number(centro_id), tipo_guia: tipo_guia, datos: datos };
+
+                        const resp = await fetch('/api/evaluacion', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(payload)
+                        });
+                        const json = await resp.json();
+                        if(!json || !json.success){
+                            alert(json && json.message ? json.message : 'Error al registrar evaluación');
+                            return;
+                        }
+                        document.getElementById('res_puntaje').textContent = json.puntaje === null ? '-' : json.puntaje;
+                        document.getElementById('res_nivel').textContent = json.nivel_riesgo || '-';
+                        document.getElementById('res_acciones').textContent = json.acciones_necesarias || '';
+                        document.getElementById('resultado').style.display = 'block';
+                    });
+                })();
+                </script>
                 </form>
             </div>
         </div>
