@@ -1,0 +1,38 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>🎓 Capacitaciones y Formación Continua</h2>
+    <p>Accede a programas de capacitación y formación para mandos y personal.</p>
+    
+    <div class="row mt-4">
+        {% for cap in capacitaciones %}
+        <div class="col-md-6 mb-3">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">{{ cap['titulo'] }}</h5>
+                    <p class="card-text">{{ cap['descripcion'] }}</p>
+                    
+                    <p class="mb-2">
+                        <small class="text-muted">
+                            📅 {{ cap['fecha_inicio'] }} al {{ cap['fecha_fin'] }}<br>
+                            👤 Responsable: {{ cap['responsable'] or 'No especificado' }}
+                        </small>
+                    </p>
+                    
+                    {% if session.get('role') == 'empleado' %}
+                        {% if cap.get('asistencia') == 1 %}
+                        <span class="badge bg-success">✓ Asististe</span>
+                        {% else %}
+                        <form method="POST" action="{{ url_for('registrar_asistencia', capacitacion_id=cap['id']) }}" style="display:inline;">
+                            <button type="submit" class="btn btn-sm btn-primary">Registrar Asistencia</button>
+                        </form>
+                        {% endif %}
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

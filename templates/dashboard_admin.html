@@ -1,0 +1,67 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Dashboard - Administrador</h2>
+    <p>Bienvenido, {{ session.username }}</p>
+    
+    <div class="row mt-4">
+        <div class="col-md-3">
+            <div class="card bg-primary text-white">
+                <div class="card-body">
+                    <h5 class="card-title">Empleados</h5>
+                    <p class="card-text display-4">{{ total_empleados }}</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-3">
+            <div class="card bg-success text-white">
+                <div class="card-body">
+                    <h5 class="card-title">Encuestas Respondidas</h5>
+                    <p class="card-text display-4">{{ total_encuestas }}</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-3">
+            <div class="card bg-warning text-white">
+                <div class="card-body">
+                    <h5 class="card-title">Denuncias</h5>
+                    <p class="card-text display-4">{{ total_denuncias }}</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-3">
+            <div class="card bg-info text-white">
+                <div class="card-body">
+                    <h5 class="card-title">Capacitaciones</h5>
+                    <p class="card-text display-4">{{ total_capacitaciones }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="mt-4">
+        <h3>Opciones del Sistema</h3>
+        <div class="list-group">
+            <a href="{{ url_for('gestion_usuarios') }}" class="list-group-item list-group-item-action">
+                📋 Gestionar Usuarios
+            </a>
+            <a href="{{ url_for('encuestas') }}" class="list-group-item list-group-item-action">
+                📝 Encuestas
+            </a>
+            <a href="{{ url_for('gestionar_denuncias') }}" class="list-group-item list-group-item-action">
+                🚨 Denuncias
+            </a>
+            <a href="{{ url_for('capacitaciones') }}" class="list-group-item list-group-item-action">
+                🎓 Capacitaciones
+            </a>
+            <a href="{{ url_for('reportes') }}" class="list-group-item list-group-item-action">
+                📊 Reportes
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

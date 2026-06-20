@@ -186,11 +186,5 @@ if __name__ == "__main__":
     
     print("--- DESGLOSE POR CATEGORÍAS ---")
     print(json.dumps(resultados["Categorias"], indent=4, ensure_ascii=False))
-        git init
-    git branch -M main
-    git add .
-    git commit -m "Publicar proyecto La Gacela NOM-035"
-    git remote add origin "https://github.com/ingalmacecito-env%C3%ADo-eso/la-gacela-nom035.git"
-    git push -u origin main    winget install --id Git.Git -e --source winget
     print("\n--- DESGLOSE POR DOMINIOS ---")
     print(json.dumps(resultados["Dominios"], indent=4, ensure_ascii=False))

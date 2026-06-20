@@ -1,0 +1,108 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Dashboard - Recursos Humanos</h2>
+    <p>Bienvenido, {{ nombre_completo }}</p>
+    
+    <div class="row mt-4">
+        <div class="col-md-3">
+            <div class="card bg-danger text-white">
+                <div class="card-body">
+                    <h5 class="card-title">Estrés Promedio</h5>
+                    <p class="card-text display-4">{{ estres_promedio }}/10</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-3">
+            <div class="card bg-success text-white">
+                <div class="card-body">
+                    <h5 class="card-title">Clima Laboral</h5>
+                    <p class="card-text display-4">{{ clima_promedio }}/10</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-3">
+            <div class="card bg-warning text-white">
+                <div class="card-body">
+                    <h5 class="card-title">Riesgo Rotación Alto</h5>
+                    <p class="card-text display-4">{{ rotacion_alto_riesgo }}</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-3">
+            <div class="card bg-info text-white">
+                <div class="card-body">
+                    <h5 class="card-title">Denuncias Pendientes</h5>
+                    <p class="card-text display-4">{{ denuncias_pendientes }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="mt-4">
+        <h3>Indicadores por Empleado</h3>
+        <div class="table-responsive">
+            <table class="table table-striped table-hover">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Empleado</th>
+                        <th>Departamento</th>
+                        <th>Puesto</th>
+                        <th>Estrés</th>
+                        <th>Clima</th>
+                        <th>Satisfacción</th>
+                        <th>Riesgo Rotación</th>
+                        <th>Última Evaluación</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for ind in indicadores %}
+                    <tr>
+                        <td>{{ ind['nombre_completo'] }}</td>
+                        <td>{{ ind['departamento'] }}</td>
+                        <td>{{ ind['puesto'] }}</td>
+                        <td>
+                            <span class="badge {% if ind['nivel_estres'] > 7 %}bg-danger{% elif ind['nivel_estres'] > 4 %}bg-warning{% else %}bg-success{% endif %}">
+                                {{ "%.1f"|format(ind['nivel_estres']) }}
+                            </span>
+                        </td>
+                        <td>
+                            <span class="badge bg-info">{{ "%.1f"|format(ind['clima_laboral']) }}</span>
+                        </td>
+                        <td>{{ "%.1f"|format(ind['satisfaccion']) }}</td>
+                        <td>
+                            <span class="badge {% if ind['riesgo_rotacion'] %}bg-danger{% else %}bg-success{% endif %}">
+                                {% if ind['riesgo_rotacion'] %}Alto{% else %}Bajo{% endif %}
+                            </span>
+                        </td>
+                        <td>{{ ind['fecha_evaluacion'] }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+    <div class="mt-4">
+        <h3>Acciones Rápidas</h3>
+        <div class="list-group">
+            <a href="{{ url_for('encuestas') }}" class="list-group-item list-group-item-action">
+                📝 Gestionar Encuestas
+            </a>
+            <a href="{{ url_for('gestionar_denuncias') }}" class="list-group-item list-group-item-action">
+                🚨 Resolver Denuncias
+            </a>
+            <a href="{{ url_for('capacitaciones') }}" class="list-group-item list-group-item-action">
+                🎓 Programar Capacitaciones
+            </a>
+            <a href="{{ url_for('reportes') }}" class="list-group-item list-group-item-action">
+                📊 Generar Reportes
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,76 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>🚨 Gestión de Denuncias</h2>
+    <p>Panel confidencial para investigar y resolver denuncias.</p>
+    
+    <div class="table-responsive mt-4">
+        <table class="table table-striped">
+            <thead class="table-dark">
+                <tr>
+                    <th>ID</th>
+                    <th>Tipo</th>
+                    <th>Estado</th>
+                    <th>Fecha</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for denuncia in denuncias %}
+                <tr>
+                    <td>#{{ denuncia['id'] }}</td>
+                    <td>{{ denuncia['tipo_denuncia'] }}</td>
+                    <td>
+                        <span class="badge {% if denuncia['estado'] == 'pendiente' %}bg-warning{% else %}bg-success{% endif %}">
+                            {{ denuncia['estado'] }}
+                        </span>
+                    </td>
+                    <td>{{ denuncia['fecha_denuncia'] }}</td>
+                    <td>
+                        <button class="btn btn-sm btn-info" data-bs-toggle="modal" data-bs-target="#detalles{{ denuncia['id'] }}">
+                            Ver Detalles
+                        </button>
+                    </td>
+                </tr>
+                
+                <!-- Modal de Detalles -->
+                <div class="modal fade" id="detalles{{ denuncia['id'] }}" tabindex="-1">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Denuncia #{{ denuncia['id'] }}</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                            </div>
+                            <div class="modal-body">
+                                <p><strong>Tipo:</strong> {{ denuncia['tipo_denuncia'] }}</p>
+                                <p><strong>Descripción:</strong><br>{{ denuncia['descripcion'] }}</p>
+                                <p><strong>Fecha del Evento:</strong> {{ denuncia['fecha_evento'] }}</p>
+                                <p><strong>Evidencia:</strong><br>{{ denuncia['evidencia'] or 'N/A' }}</p>
+                                <p><strong>Estado:</strong> {{ denuncia['estado'] }}</p>
+                                
+                                {% if denuncia['estado'] == 'pendiente' %}
+                                <form method="POST" action="{{ url_for('resolver_denuncia', denuncia_id=denuncia['id']) }}">
+                                    <div class="mb-3">
+                                        <label for="acciones{{ denuncia['id'] }}" class="form-label">
+                                            <strong>Acciones Tomadas</strong>
+                                        </label>
+                                        <textarea class="form-control" id="acciones{{ denuncia['id'] }}" 
+                                                  name="acciones_tomadas" rows="3" required></textarea>
+                                    </div>
+                                    <button type="submit" class="btn btn-success">Marcar como Resuelta</button>
+                                </form>
+                                {% else %}
+                                <p><strong>Acciones Tomadas:</strong><br>{{ denuncia['acciones_tomadas'] }}</p>
+                                <p><strong>Fecha de Resolución:</strong> {{ denuncia['fecha_resolucion'] }}</p>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

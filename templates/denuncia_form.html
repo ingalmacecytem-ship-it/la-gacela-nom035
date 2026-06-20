@@ -1,0 +1,47 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>🚨 Plataforma de Denuncias Confidenciales</h2>
+    <p>Este es un espacio seguro para reportar de forma confidencial situaciones de acoso laboral, discriminación o condiciones laborales adversas.</p>
+    
+    <div class="alert alert-warning">
+        <strong>⚠️ Confidencialidad:</strong> Tu identidad será protegida. Solo Recursos Humanos tendrá acceso a esta información y se investigará de forma discreta.
+    </div>
+    
+    <form method="POST" class="mt-4">
+        <div class="mb-3">
+            <label for="tipo_denuncia" class="form-label"><strong>Tipo de Denuncia</strong></label>
+            <select class="form-select" id="tipo_denuncia" name="tipo_denuncia" required>
+                <option value="">Selecciona un tipo...</option>
+                <option value="acoso_sexual">Acoso Sexual</option>
+                <option value="acoso_laboral">Acoso Laboral (Mobbing)</option>
+                <option value="discriminacion">Discriminación</option>
+                <option value="condiciones_adversas">Condiciones Laborales Adversas</option>
+                <option value="represalia">Represalia</option>
+                <option value="otro">Otro</option>
+            </select>
+        </div>
+        
+        <div class="mb-3">
+            <label for="descripcion" class="form-label"><strong>Descripción de los Hechos</strong></label>
+            <textarea class="form-control" id="descripcion" name="descripcion" rows="5" 
+                      placeholder="Describe con detalle lo que ocurrió..." required></textarea>
+        </div>
+        
+        <div class="mb-3">
+            <label for="fecha_evento" class="form-label"><strong>Fecha del Evento</strong></label>
+            <input type="date" class="form-control" id="fecha_evento" name="fecha_evento" required>
+        </div>
+        
+        <div class="mb-3">
+            <label for="evidencia" class="form-label"><strong>Evidencia (Opcional)</strong></label>
+            <textarea class="form-control" id="evidencia" name="evidencia" rows="3" 
+                      placeholder="Emails, mensajes, nombres de testigos, etc."></textarea>
+        </div>
+        
+        <button type="submit" class="btn btn-danger btn-lg">Enviar Denuncia Confidencial</button>
+        <a href="{{ url_for('dashboard') }}" class="btn btn-secondary btn-lg">Cancelar</a>
+    </form>
+</div>
+{% endblock %}

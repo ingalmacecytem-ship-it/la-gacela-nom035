@@ -1,0 +1,61 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>{{ cuestionario['nombre'] }}</h2>
+    <p>{{ cuestionario['descripcion'] }}</p>
+    
+    <form method="POST" class="mt-4">
+        {% for pregunta in preguntas %}
+        <div class="mb-4 p-3 border rounded">
+            <label class="form-label">
+                <strong>{{ loop.index }}. {{ pregunta['pregunta'] }}</strong>
+            </label>
+            
+            {% if pregunta['tipo'] == 'radio' %}
+                {% set opciones = pregunta['opciones'].split(',') %}
+                {% for opcion in opciones %}
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="respuesta_{{ pregunta['id'] }}" 
+                           id="opcion_{{ pregunta['id'] }}_{{ loop.index0 }}" value="{{ opcion.strip() }}" required>
+                    <label class="form-check-label" for="opcion_{{ pregunta['id'] }}_{{ loop.index0 }}">
+                        {{ opcion.strip() }}
+                    </label>
+                </div>
+                {% endfor %}
+            
+            {% elif pregunta['tipo'] == 'checkbox' %}
+                {% set opciones = pregunta['opciones'].split(',') %}
+                {% for opcion in opciones %}
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="respuesta_{{ pregunta['id'] }}" 
+                           id="opcion_{{ pregunta['id'] }}_{{ loop.index0 }}" value="{{ opcion.strip() }}">
+                    <label class="form-check-label" for="opcion_{{ pregunta['id'] }}_{{ loop.index0 }}">
+                        {{ opcion.strip() }}
+                    </label>
+                </div>
+                {% endfor %}
+            
+            {% elif pregunta['tipo'] == 'texto' %}
+                <input type="text" class="form-control" name="respuesta_{{ pregunta['id'] }}" 
+                       placeholder="Tu respuesta" required>
+            
+            {% elif pregunta['tipo'] == 'escala' %}
+                <div class="form-range-container">
+                    <input type="range" class="form-range" min="1" max="10" 
+                           name="respuesta_{{ pregunta['id'] }}" id="range_{{ pregunta['id'] }}" required>
+                    <small class="text-muted">Del 1 (muy en desacuerdo) al 10 (muy de acuerdo)</small>
+                </div>
+            
+            {% else %}
+                <textarea class="form-control" name="respuesta_{{ pregunta['id'] }}" 
+                          rows="3" placeholder="Tu respuesta"></textarea>
+            {% endif %}
+        </div>
+        {% endfor %}
+        
+        <button type="submit" class="btn btn-primary btn-lg">Enviar Encuesta</button>
+        <a href="{{ url_for('encuestas') }}" class="btn btn-secondary btn-lg">Cancelar</a>
+    </form>
+</div>
+{% endblock %}

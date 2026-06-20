@@ -1,0 +1,43 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>📊 Generador de Reportes NOM-035</h2>
+    <p>Descarga reportes en PDF y Excel de indicadores e información registrada.</p>
+    
+    <div class="row mt-4">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header bg-danger text-white">
+                    <h5>📄 Reporte de Indicadores</h5>
+                </div>
+                <div class="card-body">
+                    <p>Descarga un reporte completo en PDF con indicadores de riesgo psicosocial por empleado.</p>
+                    <a href="{{ url_for('reporte_indicadores_pdf') }}" class="btn btn-danger">
+                        📥 Descargar PDF
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header bg-success text-white">
+                    <h5>📊 Reporte de Encuestas</h5>
+                </div>
+                <div class="card-body">
+                    <p>Descarga todas las respuestas de encuestas en archivo Excel para análisis detallado.</p>
+                    <a href="{{ url_for('reporte_encuestas_excel') }}" class="btn btn-success">
+                        📥 Descargar Excel
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="alert alert-info mt-4">
+        <strong>ℹ️ Nota:</strong> Los reportes contienen información confidencial. 
+        Únicamente Recursos Humanos y Administradores tienen acceso a estos datos.
+    </div>
+</div>
+{% endblock %}

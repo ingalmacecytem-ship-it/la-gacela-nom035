@@ -18,8 +18,15 @@
                 <ul class="navbar-nav ms-auto"> <!-- Alinea a la derecha. -->
                     {% if session.get('user_id') %}
                         <li class="nav-item"><a class="nav-link" href="{{ url_for('dashboard') }}">Dashboard</a></li>
-                        <li class="nav-item"><a class="nav-link" href="{{ url_for('registrar_centro') }}">Registrar Centro</a></li>
-                        <li class="nav-item"><a class="nav-link" href="{{ url_for('evaluacion') }}">Evaluación</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{{ url_for('encuestas') }}">Encuestas</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{{ url_for('denuncias') }}">Denuncias</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{{ url_for('capacitaciones') }}">Capacitaciones</a></li>
+                        {% if session.get('role') in ['recursos_humanos', 'admin'] %}
+                            <li class="nav-item"><a class="nav-link" href="{{ url_for('reportes') }}">Reportes</a></li>
+                        {% endif %}
+                        {% if session.get('role') == 'admin' %}
+                            <li class="nav-item"><a class="nav-link" href="{{ url_for('gestion_usuarios') }}">Usuarios</a></li>
+                        {% endif %}
                         <li class="nav-item"><a class="nav-link" href="{{ url_for('logout') }}">Cerrar sesión</a></li>
                     {% endif %}
                 </ul>

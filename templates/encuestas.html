@@ -1,0 +1,37 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>📝 Encuestas NOM-035</h2>
+    <p>Responde las encuestas para que podamos identificar factores de riesgo psicosocial y mejorar el ambiente laboral.</p>
+    
+    <div class="row mt-4">
+        {% for cuest in cuestionarios %}
+        <div class="col-md-6 mb-3">
+            <div class="card {% if cuest.get('respondido') %}border-success{% endif %}">
+                <div class="card-body">
+                    <h5 class="card-title">{{ cuest['nombre'] }}</h5>
+                    <p class="card-text">{{ cuest['descripcion'] }}</p>
+                    
+                    {% if cuest.get('respondido') %}
+                    <span class="badge bg-success">✓ Ya respondida</span>
+                    {% else %}
+                    <span class="badge bg-warning">Pendiente</span>
+                    {% endif %}
+                    
+                    <br><br>
+                    <a href="{{ url_for('responder_encuesta', cuestionario_id=cuest['id']) }}" 
+                       class="btn btn-primary btn-sm">
+                        {% if cuest.get('respondido') %}Ver Respuestas{% else %}Responder Encuesta{% endif %}
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    
+    <div class="alert alert-info mt-4">
+        <strong>Nota Importante:</strong> Tus respuestas son confidenciales y se utilizarán únicamente para evaluar factores de riesgo psicosocial de acuerdo con la NOM-035.
+    </div>
+</div>
+{% endblock %}

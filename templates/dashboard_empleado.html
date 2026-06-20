@@ -1,0 +1,114 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Mi Dashboard</h2>
+    <p>Bienvenido, <strong>{{ nombre_completo }}</strong></p>
+    <p><small class="text-muted">Departamento: {{ usuario['departamento'] }} | Puesto: {{ usuario['puesto'] }}</small></p>
+    
+    <div class="row mt-4">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h5>📝 Mis Encuestas</h5>
+                </div>
+                <div class="card-body">
+                    {% if mis_respuestas %}
+                    <table class="table table-sm">
+                        <thead>
+                            <tr>
+                                <th>Encuesta</th>
+                                <th>Respuestas</th>
+                                <th>Última</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for resp in mis_respuestas %}
+                            <tr>
+                                <td>{{ resp['nombre'] }}</td>
+                                <td><span class="badge bg-success">{{ resp['respuestas'] }}</span></td>
+                                <td><small>{{ resp['ultima_respuesta'] }}</small></td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    {% else %}
+                    <p class="text-muted">Aún no has respondido encuestas.</p>
+                    {% endif %}
+                    <a href="{{ url_for('encuestas') }}" class="btn btn-sm btn-primary">Ver Encuestas Disponibles</a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header bg-info text-white">
+                    <h5>📊 Mis Indicadores</h5>
+                </div>
+                <div class="card-body">
+                    {% if mi_indicador %}
+                    <div class="alert alert-info">
+                        <p><strong>Nivel de Estrés:</strong> 
+                            <span class="badge {% if mi_indicador['nivel_estres'] > 7 %}bg-danger{% elif mi_indicador['nivel_estres'] > 4 %}bg-warning{% else %}bg-success{% endif %}">
+                                {{ "%.1f"|format(mi_indicador['nivel_estres']) }}/10
+                            </span>
+                        </p>
+                        <p><strong>Clima Laboral:</strong> 
+                            <span class="badge bg-info">{{ "%.1f"|format(mi_indicador['clima_laboral']) }}/10</span>
+                        </p>
+                        <p><strong>Satisfacción:</strong> 
+                            <span class="badge bg-success">{{ "%.1f"|format(mi_indicador['satisfaccion']) }}/10</span>
+                        </p>
+                        <p><small class="text-muted">Evaluado: {{ mi_indicador['fecha_evaluacion'] }}</small></p>
+                    </div>
+                    {% else %}
+                    <p class="text-muted">Aún no tienes indicadores evaluados.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row mt-4">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header bg-warning text-white">
+                    <h5>🎓 Capacitaciones Disponibles</h5>
+                </div>
+                <div class="card-body">
+                    {% if mis_capacitaciones %}
+                    <ul class="list-group">
+                        {% for cap in mis_capacitaciones[:5] %}
+                        <li class="list-group-item">
+                            <strong>{{ cap['titulo'] }}</strong>
+                            <br><small>{{ cap['fecha_inicio'] }} al {{ cap['fecha_fin'] }}</small>
+                            {% if cap['asistio'] %}
+                            <span class="badge bg-success">Asistida</span>
+                            {% else %}
+                            <span class="badge bg-secondary">No asistida</span>
+                            {% endif %}
+                        </li>
+                        {% endfor %}
+                    </ul>
+                    {% else %}
+                    <p class="text-muted">No hay capacitaciones disponibles.</p>
+                    {% endif %}
+                    <a href="{{ url_for('capacitaciones') }}" class="btn btn-sm btn-warning mt-3">Ver Todas las Capacitaciones</a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header bg-danger text-white">
+                    <h5>🚨 Reportar Denuncia</h5>
+                </div>
+                <div class="card-body">
+                    <p>Si has experimentado situaciones de acoso, mal trato o condiciones laborales adversas, puedes hacer una denuncia confidencial.</p>
+                    <a href="{{ url_for('denuncias') }}" class="btn btn-sm btn-danger">Hacer Denuncia Confidencial</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
